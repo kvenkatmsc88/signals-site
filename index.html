@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wyckoff Signal Reports</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f8f8f5;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+/* ── Top bar ── */
+.topbar {
+  background: #111;
+  color: #fff;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar-logo { font-size: 16px; font-weight: 700; letter-spacing: .04em; }
+.topbar-logo span { color: #22c55e; }
+.topbar-sub { font-size: 12px; color: #9ca3af; }
+
+/* ── Auth overlay ── */
+#auth-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.auth-box {
+  background: #fff;
+  border-radius: 14px;
+  padding: 36px 40px;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.auth-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.auth-box p  { font-size: 13px; color: #888; margin-bottom: 24px; }
+.auth-box input {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 14px;
+  outline: none;
+  font-family: inherit;
+}
+.auth-box input:focus { border-color: #111; }
+.auth-box button {
+  width: 100%; padding: 11px;
+  background: #111; color: #fff;
+  border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.auth-box button:hover { background: #222; }
+.auth-error { color: #dc2626; font-size: 12px; margin-top: 10px; display: none; }
+
+/* ── Main content ── */
+#main-content { display: none; }
+.container { max-width: 1100px; margin: 0 auto; padding: 36px 32px; }
+
+/* ── Hero ── */
+.hero { margin-bottom: 32px; }
+.hero h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+.hero p  { font-size: 13px; color: #888; }
+
+/* ── Today section ── */
+.today-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.today-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.today-card.featured { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e; }
+.today-card-label {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: #888;
+}
+.today-card-title { font-size: 16px; font-weight: 600; }
+.today-card-sub   { font-size: 12px; color: #888; }
+.open-btn {
+  display: inline-block; padding: 9px 18px;
+  background: #111; color: #fff;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  text-decoration: none; align-self: flex-start;
+  transition: background .15s;
+}
+.open-btn:hover { background: #333; }
+.open-btn.secondary {
+  background: #f3f4f6; color: #111;
+}
+.open-btn.secondary:hover { background: #e5e7eb; }
+.pending-badge {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 10px;
+  background: #fef9c3; color: #92400e;
+}
+
+/* ── History section ── */
+.section-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: #9ca3af; margin-bottom: 14px;
+}
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  background: #fff; border: 1px solid #e5e7eb;
+  border-radius: 10px; padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.history-item:hover { border-color: #d1d5db; }
+.history-date { font-size: 13px; font-weight: 600; }
+.history-run  { font-size: 11px; color: #888; margin-top: 2px; }
+.history-links { display: flex; gap: 8px; }
+.hist-btn {
+  font-size: 11.5px; font-weight: 600; padding: 5px 12px;
+  border-radius: 6px; text-decoration: none;
+}
+.hist-btn.signals { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.hist-btn.report  { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.hist-btn:hover   { opacity: .85; }
+
+/* ── Footer ── */
+.footer {
+  margin-top: 48px; padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer span { font-size: 11px; color: #bbb; }
+
+/* ── Empty state ── */
+.empty { text-align: center; padding: 40px; color: #aaa; font-size: 13px; }
+
+@media (max-width: 700px) {
+  .today-grid { grid-template-columns: 1fr; }
+  .container  { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Password Gate ── -->
+<div id="auth-overlay">
+  <div class="auth-box">
+    <h2>Signal Reports</h2>
+    <p>Enter password to access today's signals</p>
+    <input type="password" id="pw-input" placeholder="Password"
+           onkeydown="if(event.key==='Enter') checkPw()">
+    <button onclick="checkPw()">Access Reports</button>
+    <div class="auth-error" id="auth-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ── Top Bar ── -->
+<div class="topbar">
+  <div class="topbar-logo">WYCKOFF<span>/SIGNALS</span></div>
+  <div class="topbar-sub">Automated Daily Signals · Wyckoff v5 + Checklist A/B</div>
+</div>
+
+<!-- ── Main Content (shown after auth) ── -->
+<div id="main-content">
+  <div class="container">
+
+    <div class="hero">
+      <h1>Signal Reports</h1>
+      <p id="hero-sub">Loading today's reports...</p>
+    </div>
+
+    <!-- Today's reports -->
+    <div class="section-label">Today's Signals</div>
+    <div class="today-grid" id="today-grid">
+      <div class="today-card" id="today-am">
+        <div class="today-card-label">Premarket · 8:45 AM ET</div>
+        <div class="today-card-title">Morning Scan</div>
+        <div class="today-card-sub" id="am-sub">Checking...</div>
+        <span class="pending-badge" id="am-badge">Pending</span>
+      </div>
+      <div class="today-card featured" id="today-pm">
+        <div class="today-card-label">Post-Close · 5:00 PM ET ⭐</div>
+        <div class="today-card-title">End of Day Signals</div>
+        <div class="today-card-sub" id="pm-sub">Checking...</div>
+        <span class="pending-badge" id="pm-badge">Pending</span>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="section-label" style="margin-top:32px;">Previous Reports (Last 30 Days)</div>
+    <div class="history-list" id="history-list">
+      <div class="empty">Loading history...</div>
+    </div>
+
+    <div class="footer">
+      <span>Wyckoff Accumulation Analyzer v5 · Signal Checklist A/B · Auto-updated daily</span>
+      <span>Reports kept for 30 days · All times ET</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Password check ──────────────────────────────────────────────
+// Password is stored as a SHA-256 hash — plain text never appears here.
+// The hash is injected by GitHub Actions from the SITE_PASSWORD secret.
+const PW_HASH = "__PASSWORD_HASH__";
+
+async function sha256(msg) {
+  const buf  = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+
+async function checkPw() {
+  const val  = document.getElementById("pw-input").value;
+  const hash = await sha256(val);
+  if (hash === PW_HASH) {
+    document.getElementById("auth-overlay").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+    loadReports();
+    localStorage.setItem("wk_auth", hash);
+  } else {
+    document.getElementById("auth-error").style.display = "block";
+  }
+}
+
+// Auto-login if previously authenticated
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("wk_auth");
+  if (saved && saved === PW_HASH) {
+    document.getElementById("auth-overlay").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+    loadReports();
+  }
+});
+
+// ── Load reports manifest ───────────────────────────────────────
+async function loadReports() {
+  const today = new Date().toISOString().slice(0, 10);
+
+  try {
+    const resp = await fetch("reports_manifest.json?v=" + Date.now());
+    if (!resp.ok) throw new Error("No manifest yet");
+    const manifest = await resp.json();
+
+    // Today's entries
+    const todayEntries = manifest.filter(m => m.slug && m.slug.startsWith(today));
+    const amEntry = todayEntries.find(m => m.slug.endsWith("-am"));
+    const pmEntry = todayEntries.find(m => m.slug.endsWith("-pm"));
+
+    renderTodayCard("am", amEntry, "Morning scan based on yesterday's close");
+    renderTodayCard("pm", pmEntry, "Primary signal — full day data");
+
+    // Update hero subtitle
+    const dateStr = new Date().toLocaleDateString("en-US",
+      { weekday:"long", year:"numeric", month:"long", day:"numeric" });
+    document.getElementById("hero-sub").textContent =
+      dateStr + " · " + manifest.length + " reports available";
+
+    // History: all entries except today, newest first
+    const history = manifest
+      .filter(m => !(m.slug && m.slug.startsWith(today)))
+      .reverse();
+    renderHistory(history);
+
+  } catch (e) {
+    document.getElementById("hero-sub").textContent =
+      "Reports will appear here once the first automated run completes.";
+    document.getElementById("today-grid").innerHTML =
+      '<div class="empty" style="grid-column:1/-1">No reports yet — first run expected today.</div>';
+    document.getElementById("history-list").innerHTML =
+      '<div class="empty">No history yet.</div>';
+  }
+}
+
+function renderTodayCard(type, entry, defaultSub) {
+  const badge = document.getElementById(type + "-badge");
+  const sub   = document.getElementById(type + "-sub");
+  const card  = document.getElementById("today-" + type);
+
+  if (!entry) {
+    badge.textContent = "Not yet available";
+    sub.textContent   = defaultSub;
+    return;
+  }
+
+  sub.textContent = entry.date + " · " + entry.label;
+  badge.remove();
+
+  const btns = document.createElement("div");
+  btns.style.display = "flex"; btns.style.gap = "8px"; btns.style.flexWrap = "wrap";
+
+  const a1 = document.createElement("a");
+  a1.href = entry.path; a1.target = "_blank";
+  a1.className = "open-btn"; a1.textContent = "View Signals Table";
+  btns.appendChild(a1);
+
+  if (entry.report_path) {
+    const a2 = document.createElement("a");
+    a2.href = entry.report_path; a2.target = "_blank";
+    a2.className = "open-btn secondary"; a2.textContent = "Full Report";
+    btns.appendChild(a2);
+  }
+
+  card.appendChild(btns);
+}
+
+function renderHistory(entries) {
+  const list = document.getElementById("history-list");
+  if (!entries || entries.length === 0) {
+    list.innerHTML = '<div class="empty">No previous reports yet.</div>';
+    return;
+  }
+
+  // Group by date
+  const grouped = {};
+  for (const e of entries) {
+    const dt = e.slug ? e.slug.slice(0, 10) : e.date;
+    if (!grouped[dt]) grouped[dt] = [];
+    grouped[dt].push(e);
+  }
+
+  list.innerHTML = "";
+  for (const dt of Object.keys(grouped).sort().reverse()) {
+    const items = grouped[dt];
+    const item  = document.createElement("div");
+    item.className = "history-item";
+
+    const info = document.createElement("div");
+    const date = new Date(dt + "T12:00:00").toLocaleDateString("en-US",
+      { weekday:"short", month:"short", day:"numeric", year:"numeric" });
+    info.innerHTML =
+      `<div class="history-date">${date}</div>` +
+      `<div class="history-run">${items.map(i=>i.label).join(" · ")}</div>`;
+
+    const links = document.createElement("div");
+    links.className = "history-links";
+    for (const e of items) {
+      const a1 = document.createElement("a");
+      a1.href = e.path; a1.target = "_blank";
+      a1.className = "hist-btn signals";
+      a1.textContent = e.label.includes("Pre") ? "AM Signals" : "PM Signals";
+      links.appendChild(a1);
+      if (e.report_path) {
+        const a2 = document.createElement("a");
+        a2.href = e.report_path; a2.target = "_blank";
+        a2.className = "hist-btn report";
+        a2.textContent = "Full Report";
+        links.appendChild(a2);
+      }
+    }
+
+    item.appendChild(info);
+    item.appendChild(links);
+    list.appendChild(item);
+  }
+}
+</script>
+
+</body>
+</html>
