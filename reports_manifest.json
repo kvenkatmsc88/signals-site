@@ -12,5 +12,12 @@
     "path": "reports/Pre-Market/2026-05-04-am-signals.html",
     "report_path": "reports/Pre-Market/2026-05-04-am-report.html",
     "slug": "2026-05-04-am"
+  },
+  {
+    "date": "May 04, 2026",
+    "label": "Post-Close",
+    "path": "reports/Post-Market/2026-05-04-pm-signals.html",
+    "report_path": "reports/Post-Market/2026-05-04-pm-report.html",
+    "slug": "2026-05-04-pm"
   }
 ]
