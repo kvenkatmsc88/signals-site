@@ -5,5 +5,12 @@
     "path": "reports/2026-05-03-pm-signals.html",
     "report_path": "reports/2026-05-03-pm-report.html",
     "slug": "2026-05-03-pm"
+  },
+  {
+    "date": "May 04, 2026",
+    "label": "Premarket",
+    "path": "reports/Pre-Market/2026-05-04-am-signals.html",
+    "report_path": "reports/Pre-Market/2026-05-04-am-report.html",
+    "slug": "2026-05-04-am"
   }
 ]
