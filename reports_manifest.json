@@ -1,12 +1,5 @@
 [
   {
-    "date": "May 12, 2026",
-    "label": "Post-Close",
-    "path": "reports/Post-Market/2026-05-12-pm-signals.html",
-    "report_path": "reports/Post-Market/2026-05-12-pm-report.html",
-    "slug": "2026-05-12-pm"
-  },
-  {
     "date": "May 13, 2026",
     "label": "Post-Close",
     "path": "reports/Post-Market/2026-05-13-pm-signals.html",
