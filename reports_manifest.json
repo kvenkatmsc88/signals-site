@@ -131,5 +131,12 @@
     "path": "reports/Post-Market/2026-06-22-pm-signals.html",
     "report_path": "reports/Post-Market/2026-06-22-pm-report.html",
     "slug": "2026-06-22-pm"
+  },
+  {
+    "date": "Jun 23, 2026",
+    "label": "Post-Close",
+    "path": "reports/Post-Market/2026-06-23-pm-signals.html",
+    "report_path": "reports/Post-Market/2026-06-23-pm-report.html",
+    "slug": "2026-06-23-pm"
   }
 ]
