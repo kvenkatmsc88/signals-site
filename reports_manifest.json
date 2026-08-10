@@ -138,5 +138,12 @@
     "path": "reports/Post-Market/2026-08-07-pm-signals.html",
     "report_path": "reports/Post-Market/2026-08-07-pm-report.html",
     "slug": "2026-08-07-pm"
+  },
+  {
+    "date": "Aug 10, 2026",
+    "label": "Post-Close",
+    "path": "reports/Post-Market/2026-08-10-pm-signals.html",
+    "report_path": "reports/Post-Market/2026-08-10-pm-report.html",
+    "slug": "2026-08-10-pm"
   }
 ]
