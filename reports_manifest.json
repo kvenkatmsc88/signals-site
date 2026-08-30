@@ -1,12 +1,5 @@
 [
   {
-    "date": "Jul 30, 2026",
-    "label": "Post-Close",
-    "path": "reports/Post-Market/2026-07-30-pm-signals.html",
-    "report_path": "reports/Post-Market/2026-07-30-pm-report.html",
-    "slug": "2026-07-30-pm"
-  },
-  {
     "date": "Jul 31, 2026",
     "label": "Post-Close",
     "path": "reports/Post-Market/2026-07-31-pm-signals.html",
