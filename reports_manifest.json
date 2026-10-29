@@ -152,5 +152,12 @@
     "path": "reports/Post-Market/2026-10-27-pm-signals.html",
     "report_path": "reports/Post-Market/2026-10-27-pm-report.html",
     "slug": "2026-10-27-pm"
+  },
+  {
+    "date": "Oct 28, 2026",
+    "label": "Post-Close",
+    "path": "reports/Post-Market/2026-10-28-pm-signals.html",
+    "report_path": "reports/Post-Market/2026-10-28-pm-report.html",
+    "slug": "2026-10-28-pm"
   }
 ]
